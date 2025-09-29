@@ -119,6 +119,68 @@ void KruskalAl(WeightedGraph gr) {
 
 
 
+struct Item {
+    string name;
+    string job; // a,b,c 중 하나
+    int attack;
+    int level;
+    int timestamp;
+};
+
+
+bool compareItem(const Item& a, const Item& b) {
+    //레벨 내림차순
+    if (a.level != b.level) {
+        return a.level > b.level;
+    }
+
+    //공격력 내림차순
+    if (a.attack != b.attack) {
+        return a.attack > b.attack;
+    }
+
+    //시간순 오름차순
+    return a.timestamp < b.timestamp;
+}
+
+class inven {
+private:
+    vector<Item> invens;
+    int next_timestamp;
+
+public:
+    inven() : next_timestamp(0) {}
+
+    void add_item(const string& name, const string& job, int attack, int level) {
+        if (job != "A" && job != "B" && job != "C") {
+            throw invalid_argument("Job must be 'A', 'B', or 'C'.");
+        }
+
+        Item newItem = { name, job, attack, level, next_timestamp };
+        invens.push_back(newItem);
+        next_timestamp++;
+        cout << name << " 아이템 추가됨 (Timestamp: " << newItem.timestamp << ")" << endl;
+    }
+
+    // 정렬
+    void sort_by_priority() {
+        std::sort(invens.begin(), invens.end(), compareItem);
+    }
+
+    // 테스트용 출력 함수
+    void print_items() {
+        for (auto& item : invens) {
+            cout << "이름: " << item.name
+                << ", 직업: " << item.job
+                << ", 공격력: " << item.attack
+                << ", 레벨: " << item.level
+                << ", 시간: " << item.timestamp
+                << endl;
+        }
+    }
+};
+
+
 
 int main() {
 	cout << "F(2) : " << Fbo(2) << endl;
@@ -144,6 +206,17 @@ int main() {
 
     KruskalAl(g);
 
-    vector<int> v = { 5, 3, 8, 3, 9, 1, 5, 7, 8, 2 };
+    inven my_inven;
 
+    my_inven.add_item("A의 검", "A", 150, 50);  
+    my_inven.add_item("B의 검" , "B", 10, 60);  
+    my_inven.add_item("A의 활", "A", 150, 50); 
+    my_inven.add_item("C의 지팡이", "C", 200, 40); 
+    my_inven.add_item("B의 지팡이", "B", 20, 60);  
+    my_inven.add_item("A의 지팡이", "A", 180, 50); 
+
+    my_inven. print_items();
+    my_inven.sort_by_priority();
+    cout << endl;
+    my_inven.print_items();
 }
